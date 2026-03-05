@@ -27,6 +27,12 @@ class Node:
             message["ttl"] -= 1
             self.message_queue.append(message)
 
+    def ping(self, message):
+        for neighbor in self.neighbors:
+            # TODO: if neighbor inactive remove him from list
+            neighbor.handle_ping(message)
+
+
     def pong(self):
         return
     
@@ -46,7 +52,9 @@ class Node:
         
         
         while self.action_this_turn < self.MAX_ACTIONS_PER_TURN:
+            self.action_this_turn += 1
+            
             message = self.message_queue.pop()
-            message[0] = self.id
+            message[0] = self.id # Changes sender id
 
-            self.handle_ping(message)
+            self.ping(message)
