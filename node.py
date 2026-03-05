@@ -16,5 +16,15 @@ class Node:
         self.neighbors = self.centralHubs.get_neighbors(self.id, self.neighbors)
 
     
-    def takeTurn():
-        active_probab = random.random()
+    def takeTurn(active):
+        active_probab = random.random() # this generates 0.0 to 1.0
+
+        if active == False:
+            if active_probab < 0.3:
+                active = True
+        else:
+            if active_probab < 0.3:
+                active = False
+                # TODO: clear message queue here
+            elif active_probab >= 0.3:
+                
