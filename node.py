@@ -27,8 +27,7 @@ class Node:
             if active_probab < 0.3:
                 self.active = False
                 # TODO: clear message queue here
-            elif active_probab >= 0.3:
-                sendPing()
-                self.action_this_turn += 1
-
+                return
+        
+        while self.action_this_turn < self.MAX_ACTIONS_PER_TURN:
             
