@@ -24,10 +24,13 @@ class Node:
             if active_probab < 0.3:
                 self.active = True
         else:
-            if active_probab < 0.3:
+            if active_probab < 0.1:
                 self.active = False
                 # TODO: clear message queue here
                 return
+            elif active_probab < 0.3:
+                self.action_this_turn += 1 
+        
         
         while self.action_this_turn < self.MAX_ACTIONS_PER_TURN:
             message = self.message_queue.pop()
