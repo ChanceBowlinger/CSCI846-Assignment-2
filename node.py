@@ -48,7 +48,14 @@ class Node:
                 # TODO: clear message queue here
                 return
             elif active_probab < 0.3:
+                new_message = {
+                    "sender": self.id,
+                    "query": self.bag_of_words, 
+                    "ttl": 10
+                }
+                self.ping(new_message)
                 self.action_this_turn += 1 
+
         
         
         while self.action_this_turn < self.MAX_ACTIONS_PER_TURN:
