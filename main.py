@@ -1,11 +1,13 @@
-from experiment_config import get_experiment_config
+from experiment_config import get_experiment_config, get_known_words
 from network import Network
 from central_hubs import CentralHubs
 from node import Node
+import random
 
 def main():
     # Read in config variables
     config = get_experiment_config()
+    known_words = get_known_words()
 
     network = Network(
         max_ttl=config["message_ttl"], 
@@ -20,8 +22,11 @@ def main():
     # Initialize nodes
     nodes = []
     for i in range(config["num_nodes"]):
-        # TODO - add random bag of words
-        node = Node(id=i, centralHubs=central_hubs, bagOfWords=[])
+
+        # Give each node random words in known_words
+        random_words = random.sample(known_words, config["known_words_per_node"])
+
+        node = Node(id=i, centralHubs=central_hubs, bagOfWords=[random_words])
         nodes.append(node)
     central_hubs.set_known_nodes(nodes)
 
