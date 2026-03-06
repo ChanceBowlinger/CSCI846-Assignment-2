@@ -28,15 +28,21 @@ class Node:
             self.message_queue.append(message)
 
     def ping(self, message):
+        new_neighbors = []
         for neighbor in self.neighbors:
-            # TODO: if neighbor inactive remove him from list
-            neighbor.handle_ping(message)
+            if neighbor.active:
+                new_neighbors.append(neighbor) # if neighbor inactive remove him from list  
+        self.neighbors = new_neighbors
+
+        for neighbor in self.neighbors:
+            neighbor.handle_ping(message.copy())
 
 
     def pong(self):
         return
     
     def take_turn(self):
+        self.action_this_turn = 0
         active_probab = random.random() # this generates 0.0 to 1.0
 
         if self.active == False:
@@ -45,12 +51,16 @@ class Node:
         else:
             if active_probab < 0.1:
                 self.active = False
-                # TODO: clear message queue here
+                self.message_queue.clear() # clear message queue here
                 return
             elif active_probab < 0.3:
+                
+                while (query := f"word_{random.randint(1,100)}") in self.bag_of_words:
+                    pass
+
                 new_message = {
                     "sender": self.id,
-                    "query": self.bag_of_words, 
+                    "query": query, 
                     "ttl": 10
                 }
                 self.ping(new_message)
@@ -62,6 +72,6 @@ class Node:
             self.action_this_turn += 1
             
             message = self.message_queue.pop()
-            message[0] = self.id # Changes sender id
+            message["sender"] = self.id # Changes sender id
 
             self.ping(message)
