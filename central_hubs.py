@@ -12,7 +12,7 @@ class CentralHubs:
         neighbors = current_neighbors.copy()
 
         while len(neighbors) < self.network.min_neighbors:
-            new_neighbor = self.known_nodes[(node_id + len(neighbors) + 1) % self.num_nodes]
+            new_neighbor = self.known_nodes[(node_id + len(neighbors) + 1) % len(self.known_nodes)]
             if new_neighbor not in neighbors and new_neighbor.id != node_id:
 
                 # Make sure node is active before adding as neighbor
