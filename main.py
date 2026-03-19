@@ -20,7 +20,7 @@ def main():
     network.set_central_hubs(central_hubs)
 
     # Initialize nodes
-    nodes = []
+    nodes:list[Node] = []
     for i in range(config["num_nodes"]):
 
         # Give each node random words in known_words
@@ -30,10 +30,13 @@ def main():
         nodes.append(node)
     central_hubs.set_known_nodes(nodes)
 
+    # Instantiate all nodes with neighbors from central hubs
+    for node in nodes:
+        node.get_new_neighbors()
+
     # Run simulation for specified number of turns
     for turn in range(config["num_turns"]):
         print(f"Turn {turn + 1}")
-        # TODO - implement message sending and node actions
         for node in nodes:
             pass # TODO - implement node actions
     
