@@ -16,8 +16,6 @@ class Node:
         self.message_queue = []
         self.action_this_turn = 0
 
-        self.get_new_neighbors()
-
     def get_new_neighbors(self):
         self.neighbors = self.central_hubs.get_neighbors(self.id, self.neighbors)
 
