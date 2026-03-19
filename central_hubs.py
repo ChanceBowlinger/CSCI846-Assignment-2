@@ -11,8 +11,9 @@ class CentralHubs:
         """Returns list of neighbor node IDs for a given node ID, excluding current neighbors."""
         neighbors = current_neighbors.copy()
 
+        counter = 1
         while len(neighbors) < self.network.min_neighbors:
-            new_neighbor = self.known_nodes[(node_id + len(neighbors) + 1) % len(self.known_nodes)]
+            new_neighbor = self.known_nodes[(node_id + len(neighbors) + counter) % len(self.known_nodes)]
             if new_neighbor not in neighbors and new_neighbor.id != node_id:
 
                 # Make sure node is active before adding as neighbor
@@ -22,5 +23,7 @@ class CentralHubs:
                     # Add the caller node as a neighbor to the new neighbor as well
                     # Real world network would handle thisas a ping-pong message, but we handle here for simplicity
                     new_neighbor.neighbors.append(self.known_nodes[node_id])
+                else:
+                    counter += 1
 
         return neighbors

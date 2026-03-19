@@ -1,11 +1,11 @@
 import random
 
-class Node:
-    MAX_ACTIONS_PER_TURN = 10 # TODO: Change this
-    def __init__(self, id, central_hubs, bag_of_words):
 
+class Node:
+    def __init__(self, id, central_hubs, bag_of_words):
         self.id = id
         self.central_hubs = central_hubs
+        self.MAX_ACTIONS_PER_TURN = self.central_hubs.network.max_actions_per_turn
         self.bag_of_words = bag_of_words
         self.active = True
         self.neighbors = []
@@ -17,7 +17,7 @@ class Node:
         self.action_this_turn = 0
 
     def get_new_neighbors(self):
-        self.neighbors = self.central_hubs.get_neighbors(self.id, self.neighbors)
+        self.neighbors = self.central_hubs.get_new_neighbors(self.id, self.neighbors)
 
     def handle_ping(self, message):
         if message["query"] in self.bag_of_words:
@@ -47,10 +47,13 @@ class Node:
         if self.active == False:
             if active_probab < 0.3:
                 self.active = True
+                self.get_new_neighbors() # get new neighbors when node becomes active again
+                self.action_this_turn += 1
         else:
             if active_probab < 0.1:
                 self.active = False
                 self.message_queue.clear() # clear message queue here
+                self.neighbors.clear() # clear neighbors here
                 return
             elif active_probab < 0.3:
                 
@@ -60,7 +63,7 @@ class Node:
                 new_message = {
                     "sender": self.id,
                     "query": query, 
-                    "ttl": 10
+                    "ttl": self.central_hubs.network.max_ttl
                 }
                 self.ping(new_message)
                 self.action_this_turn += 1 
@@ -69,7 +72,8 @@ class Node:
         
         while self.action_this_turn < self.MAX_ACTIONS_PER_TURN:
             self.action_this_turn += 1
-            
+            if len(self.message_queue) == 0:
+                break
             message = self.message_queue.pop()
             message["sender"] = self.id # Changes sender id
 
