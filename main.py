@@ -26,7 +26,7 @@ def main():
         # Give each node random words in known_words
         random_words = random.sample(known_words, config["known_words_per_node"])
 
-        node = Node(id=i, centralHubs=central_hubs, bagOfWords=[random_words])
+        node = Node(id=i, central_hubs=central_hubs, bag_of_words=[random_words])
         nodes.append(node)
     central_hubs.set_known_nodes(nodes)
 
