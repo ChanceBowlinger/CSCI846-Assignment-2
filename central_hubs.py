@@ -7,7 +7,7 @@ class CentralHubs:
     def set_known_nodes(self, nodes):
         self.known_nodes = nodes
 
-    def get_neighbors(self, node_id, current_neighbors: list[Node]) -> list:
+    def get_new_neighbors(self, node_id, current_neighbors: list[Node]) -> list:
         """Returns list of neighbor node IDs for a given node ID, excluding current neighbors."""
         neighbors = current_neighbors.copy()
 
@@ -18,5 +18,9 @@ class CentralHubs:
                 # Make sure node is active before adding as neighbor
                 if new_neighbor.active: # node id will equal index in known nodes list
                     neighbors.append(new_neighbor)
+
+                    # Add the caller node as a neighbor to the new neighbor as well
+                    # Real world network would handle thisas a ping-pong message, but we handle here for simplicity
+                    new_neighbor.neighbors.append(self.known_nodes[node_id])
 
         return neighbors

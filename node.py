@@ -7,8 +7,6 @@ class Node:
         self.active = True
         self.neighbors = []
 
-        self.get_new_neighbors()
-
     def get_new_neighbors(self):
         self.neighbors = self.central_hubs.get_neighbors(self.id, self.neighbors)
 
