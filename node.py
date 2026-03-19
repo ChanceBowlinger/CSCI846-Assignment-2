@@ -1,6 +1,15 @@
 import random
 
 
+class Message:    
+    def __init__(self, id, sender_id, query, ttl):
+        self.id = id
+        self.is_active = True
+        self.sender_id = sender_id
+        self.query = query
+        self.ttl = ttl
+
+
 class Node:
     def __init__(self, id, central_hubs, bag_of_words):
         self.id = id
@@ -20,10 +29,13 @@ class Node:
         self.neighbors = self.central_hubs.get_new_neighbors(self.id, self.neighbors)
 
     def handle_ping(self, message):
-        if message["query"] in self.bag_of_words:
-            print(f"Node {self.id} found the keyword {message['query']} from sender {message['sender']}")
-        elif message["ttl"] > 0:
-            message["ttl"] -= 1
+        if message.is_active == False:
+            return
+        if message.query in self.bag_of_words:
+            print(f"Node {self.id} found the keyword {message.query} in message {message.id} from sender {message.sender_id}")
+            message.is_active = False
+        elif message.ttl > 0:
+            message.ttl -= 1
             self.message_queue.append(message)
 
     def ping(self, message):
@@ -34,7 +46,7 @@ class Node:
         self.neighbors = new_neighbors
 
         for neighbor in self.neighbors:
-            neighbor.handle_ping(message.copy())
+            neighbor.handle_ping(message)
 
 
     def pong(self):
@@ -60,11 +72,13 @@ class Node:
                 while (query := f"word_{random.randint(1,100)}") in self.bag_of_words:
                     pass
 
-                new_message = {
-                    "sender": self.id,
-                    "query": query, 
-                    "ttl": self.central_hubs.network.max_ttl
-                }
+                new_message = Message(
+                    id=self.central_hubs.mesage_id_counter + 1, 
+                    sender_id=self.id, 
+                    query=query, 
+                    ttl=self.central_hubs.network.max_ttl
+                )
+                self.central_hubs.mesage_id_counter += 1
                 self.ping(new_message)
                 self.action_this_turn += 1 
 
@@ -75,6 +89,6 @@ class Node:
             if len(self.message_queue) == 0:
                 break
             message = self.message_queue.pop()
-            message["sender"] = self.id # Changes sender id
+            message.sender_id = self.id # Changes sender id
 
             self.ping(message)
