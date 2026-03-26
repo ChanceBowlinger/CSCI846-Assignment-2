@@ -1,16 +1,20 @@
 import random
 
 
-class Message:    
+class Message:
+    TOTAL_MESSAGES = 0
     def __init__(self, id, sender_id, query, ttl):
         self.id = id
         self.is_active = True
         self.sender_id = sender_id
         self.query = query
         self.ttl = ttl
+        Message.TOTAL_MESSAGES += 1
 
 
 class Node:
+    MESSEGE_FOUND_COUNT = 0
+    PINGS_GENERATED = 0
     def __init__(self, id, central_hubs, bag_of_words):
         self.id = id
         self.central_hubs = central_hubs
@@ -31,9 +35,12 @@ class Node:
     def handle_ping(self, message):
         if message.is_active == False:
             return
+        
+        Node.PINGS_GENERATED += 1
         if message.query in self.bag_of_words:
             print(f"Node {self.id} found the keyword {message.query} in message {message.id} from sender {message.sender_id}")
             message.is_active = False
+            Node.MESSEGE_FOUND_COUNT += 1
         elif message.ttl > 0:
             message.ttl -= 1
             self.message_queue.append(message)

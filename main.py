@@ -1,12 +1,15 @@
 from experiment_config import get_experiment_config, get_known_words
 from network import Network
 from central_hubs import CentralHubs
-from node import Node
+from node import Message, Node
 import random
 
 def main():
     # Read in config variables
     config = get_experiment_config()
+    # config["message_ttl"] = 25
+    # config["min_neighbors"] = 25
+    # config["known_words_per_node"] = 25
     known_words = get_known_words()
 
     network = Network(
@@ -40,6 +43,10 @@ def main():
         for node in nodes:
             node.take_turn()
     
+    print(f"Total messages sent: {Message.TOTAL_MESSAGES}")
+    print(f"Total messages found: {Node.MESSEGE_FOUND_COUNT}")
+    print(f"Total pings generated: {Node.PINGS_GENERATED}")
+    print(f"Hit rate: {Node.MESSEGE_FOUND_COUNT / Message.TOTAL_MESSAGES * 100:.2f}%")
 
 if __name__ == "__main__":
     main()
