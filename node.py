@@ -32,7 +32,7 @@ class Node:
     def get_new_neighbors(self):
         self.neighbors = self.central_hubs.get_new_neighbors(self.id, self.neighbors)
 
-    def handle_ping(self, message):
+    def add_to_neighbor_queue(self, message):
         if message.is_active == False:
             return
         
@@ -53,7 +53,7 @@ class Node:
         self.neighbors = new_neighbors
 
         for neighbor in self.neighbors:
-            neighbor.handle_ping(message)
+            neighbor.add_to_neighbor_queue(message)
 
 
     def pong(self):

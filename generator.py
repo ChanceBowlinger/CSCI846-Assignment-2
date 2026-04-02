@@ -40,7 +40,7 @@ class ExperimentPlotter:
         plt.show()
 
     def plot_ttl_vs_pings(self):
-        self._setup_plot('TTL vs Pings Generated', 'TTL', 'Pings Generated')
+        self._setup_plot('TTL vs Message Broadcasted', 'TTL', 'Messages Broadcasted')
         plt.plot(self.data['ttl'], self.data['ttl_pings'], marker='s', color='r', label='Pings')
         plt.show()
 
@@ -50,7 +50,7 @@ class ExperimentPlotter:
         plt.show()
 
     def plot_min_neighbors_vs_pings(self):
-        self._setup_plot('Min-Neighbors vs Pings Generated', 'Min-Neighbors', 'Pings Generated')
+        self._setup_plot('Min-Neighbors vs Message Broadcasted', 'Min-Neighbors', 'Message Broadcasted')
         plt.plot(self.data['min_neighbors'], self.data['min_neighbors_pings'], marker='v', color='orange')
         plt.show()
 
